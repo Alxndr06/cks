@@ -124,3 +124,10 @@ header {
 .main-footer a:hover {
     text-decoration: underline;
 }
+
+.error_message {
+    color: darkred;
+    display: flex;
+    justify-content: center;
+}
+

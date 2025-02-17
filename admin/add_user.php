@@ -7,8 +7,21 @@ if (!isset($_SESSION['id']) || $_SESSION['role'] !== "admin") {
     exit;
 }
 
-//Insérer code backend ici
+//Backend
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $role = $_POST['role'];
 
+    $stmt = $pdo->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
+    if ($stmt->execute([$username, $email, $password, $role])) {
+        header('Location: users_list.php');
+        exit;
+    } else {
+        echo "Something went wrong";
+    }
+}
 ?>
 
 <div id="main-part">

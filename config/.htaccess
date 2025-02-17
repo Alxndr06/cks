@@ -1,0 +1,2 @@
+# Empêche l'accès aux fichiers sensibles
+Deny from all
