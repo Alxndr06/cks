@@ -1,6 +1,6 @@
 # Fichiers sensibles
 config/config.php
-includes/db_connect.php
+config/db_connect.php
 
 # Dossiers à ignorer
 node_modules/
