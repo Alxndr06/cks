@@ -1,0 +1,12 @@
+# Fichiers sensibles
+config/config.php
+includes/db_connect.php
+
+# Dossiers à ignorer
+node_modules/
+vendor/
+.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db

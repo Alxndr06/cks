@@ -1,0 +1,126 @@
+/* Reset de la page */
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    background-color: gray;
+}
+
+/* HEADER STYLES */
+header {
+    background-color: lightgray;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* NAV HEADER */
+#navbar-header {
+    display: flex;
+    background-color: lightgray;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px 60px 10px 60px;
+}
+
+#navbar-header ul li {
+    padding: 5px;
+    margin: 0 10px;
+    display: inline-flex;
+    background-color: lightgray;
+    list-style: none;
+    text-align: center;
+}
+
+#navbar-header a {
+    padding: 5px;
+    border-radius: 5px;
+    background-color: gray;
+    text-decoration: none;
+    color: white;
+}
+
+#navbar-header a:hover {
+    text-decoration: underline;
+    background-color: blue;
+}
+/* CONNECT BUTTON */
+#connect_button {
+    padding: 5px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    background-color: gray;
+    margin-left: auto;
+}
+
+#connect_button:hover {
+    text-decoration: underline;
+    background-color: blue;
+}
+
+/* NAV DASHBOARD */
+#nav_dashboard {
+    text-align: center;
+    list-style-type: none;
+    position: relative;
+}
+
+#nav_dashboard li {
+    padding-bottom: 5px;
+}
+
+#nav_dashboard a {
+    text-decoration: none;
+}
+
+#nav_dashboard a:visited {
+    text-decoration: none;
+}
+
+#main-part {
+    background-color: #fff;
+    margin: 10px 20% 3% 20%;
+    padding: 1%;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    /*box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;*/
+    flex-grow: 1;
+}
+
+#main-part h2 {
+    margin-bottom: 10px;
+}
+
+#user_resume {
+    margin-bottom: 10px;
+}
+
+/* FOOTER */
+.main-footer {
+    font-size: small;
+    color: black;
+    background-color: lightgrey;
+    padding: 20px;
+    text-align: center;
+}
+
+.main-footer a {
+    text-decoration: none;
+    color: black;
+}
+
+.main-footer a:hover {
+    text-decoration: underline;
+}
