@@ -1,10 +1,7 @@
 <?php
 require_once '../includes/header.php';
 
-if (!isset($_SESSION['id'])) {
-    header("Location: ../login.php");
-    exit;
-}
+checkConnect();
 ?>
 
     <div id="main-part">

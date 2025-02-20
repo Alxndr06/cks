@@ -2,22 +2,18 @@
 require_once '../includes/header.php';
 
 //Vérifie si l'utilisateur est connecté
-if (!isset($_SESSION['id'])) {
-    header("Location: ../login.php");
-    exit;
-}
+checkConnect();
 ?>
 
 <div id="main-part">
     <h2>User dashboard</h2>
     <div id="user_resume">
-        <p>Welcome <?= $username ?>. You owe <?= colorDebt($note) ?> €.</p>
-        <p>Role : <?= $role ?></p>
+        <p>Hello <?= $username ?>. <?php if (!$noteIsNull): ?>You owe <?= colorDebt($note) ?> € <?php else: ?> You have no debt <?php endif; ?>.</p>
     </div>
     <div id="nav_dashboard">
         <li><a title="My profile" href="user_infos.php">🙋‍♂️️My profile</a></li>
         <li><a title="Orders logs" href="order_logs.php">🧺My orders</a></li>
-        <li><a title="Pay my bill" href="#">💵Pay my bill</a></li>
+        <?php if (!$noteIsNull): ?><li><a title="Pay my bill" href="payment.php">💵Pay my bill</a></li><?php endif; ?>
     </div>
 
 </div>

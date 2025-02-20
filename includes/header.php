@@ -19,7 +19,7 @@ require_once __DIR__ . '/../includes/functions.php';
 <header>
     <h1>Cks App v0.5</h1>
     <?php if ($isLoggedIn): ?>
-    <a id="connect_button" title="Disconnect" href="<?= $base_url ?>logout.php">Disconnect (<?php echo $username ?>)</a>
+    <a id="disconnect_button" title="Disconnect" href="<?= $base_url ?>logout.php">Disconnect (<?php echo $username ?>)</a>
     <?php else: ?>
     <a id="connect_button" title=Connect" href="<?= $base_url ?>logout.php">Connect</a>
     <?php endif; ?>
