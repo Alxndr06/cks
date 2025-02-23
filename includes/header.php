@@ -10,8 +10,8 @@ require_once __DIR__ . '/../includes/functions.php';
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <script src="../assets/js/script.js" defer></script>
+    <link rel="stylesheet" href="<?= $base_url ?>/assets/css/styles.css">
+    <script src="<?= $base_url ?>/assets/js/script.js" defer></script>
     <title>Cks V0.5</title>
 </head>
 <body>
@@ -28,7 +28,7 @@ require_once __DIR__ . '/../includes/functions.php';
 <nav id="navbar-header">
     <ul>
         <li><a title="Home" href="<?= $base_url ?>index.php">Home</a></li>
-        <li><a title="Snack shop" href="<?= $base_url ?>snacks_list.php">Buy a snack</a></li>
+        <li><a title="Snack shop" href="<?= $base_url ?>snack_list.php">Buy a snack</a></li>
         <li><a title="User dashboard" href="<?= $base_url ?>user/dashboard.php">Dashboard</a> </li>
         <?php if ($isLoggedIn && $isAdmin): ?>
         <li><a title="Admin dashboard" href="<?= $base_url ?>admin/admin_dashboard.php">Admin</a> </li>

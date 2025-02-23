@@ -32,4 +32,44 @@ function checkConnect() : void {
         header("Location: ../login.php");
         exit;
     }
+    require_once '../config/db_connect.php';
+
+    // Si l'utilisateur n'existe plus en BDD, on le déconnecte.
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['id']]);
+    $user = $stmt->fetch();
+
+    if (!$user) {
+        $_SESSION = [];
+        session_unset();
+        session_destroy();
+        header("Location: ../login.php?message=Account deleted");
+        exit;
+    }
+}
+
+// fonction de bouton retour
+function backupLink($default, $label) {
+    $backupUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $default;
+    echo '<a href="' . htmlspecialchars($backupUrl) . '" class="EOB">
+            ' . htmlspecialchars($label) . '
+          </a>';
+}
+
+// fonction de barre de gestion des users
+function generateUserAdminActions($user) {
+    $userId = htmlspecialchars($user['id']);
+    $lockIcon = $user['locked'] == 0 ? '🔒 Lock' : '🔓 Unlock';
+    $lockUrl = "lock_user.php?id=$userId";
+    $editUrl = "edit_user.php?id=$userId";
+    $deleteUrl = "delete_user.php?id=$userId";
+    $billUrl = "bill_user.php?id=$userId";
+
+    return '
+    <div class="OEB">
+        <a href="' . $lockUrl . '">' . $lockIcon . '</a> |
+        <a href="' . $editUrl . '">✏️ Edit</a> |
+        <a href="' . $deleteUrl . '" onclick="return confirm(\'Delete user ?\');">🗑️ Delete</a> |
+        <a href="' . $billUrl . '">💲 Bill</a>
+    </div>';
 }

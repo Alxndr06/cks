@@ -11,7 +11,7 @@ checkConnect();
         <p>Hello <?= $username ?>. <?php if (!$noteIsNull): ?>You owe <?= colorDebt($note) ?> € <?php else: ?> You have no debt <?php endif; ?>.</p>
     </div>
     <div id="nav_dashboard">
-        <li><a title="My profile" href="user_infos.php">🙋‍♂️️My profile</a></li>
+        <li><a title="My profile" href="profile.php">🙋‍♂️️My profile</a></li>
         <li><a title="Orders logs" href="order_logs.php">🧺My orders</a></li>
         <?php if (!$noteIsNull): ?><li><a title="Pay my bill" href="payment.php">💵Pay my bill</a></li><?php endif; ?>
     </div>

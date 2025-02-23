@@ -104,6 +104,11 @@ header {
     flex-grow: 1;
 }
 
+#main-part a:visited {
+    text-decoration: none;
+}
+
+
 #main-part h2 {
     margin-bottom: 10px;
 }
