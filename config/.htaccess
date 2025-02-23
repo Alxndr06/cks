@@ -1,2 +1,3 @@
-# Empêche l'accès aux fichiers sensibles
-Deny from all
+<RequireAll>
+    Require all denied
+</RequireAll>
