@@ -20,7 +20,7 @@ $users = $stmt->fetchAll();
             <th>Role</th>
             <th>Status</th>
             <?php if ($_SESSION['role'] === "admin"): ?>
-                <th>Actions</th>
+                <th>Quick actions</th>
             <?php endif; ?>
 
         </tr>
@@ -32,9 +32,7 @@ $users = $stmt->fetchAll();
                 <td><?= colorDebt($user['note']) ?> €</td>
                 <td><?= htmlspecialchars(ucfirst(strtolower($user['role']))) ?></td>
                 <td><?php if (!$user['locked']): ?>Active<?php else: ?>Locked<?php endif; ?></td>
-                <?php if ($_SESSION['role'] === "admin"): ?>
-                <td><a href="user_details.php?id=<?= $user['id'] ?>">🔎open</a> | <a href="edit_user.php?id=<?= $user['id'] ?>">✏️edit</a> | <a href="bill_user.php?id=<?= $user['id'] ?>">💲bill</a></td>
-                <?php endif; ?>
+                <?= restrictedAdminActions($user) ?>
             </tr>
         <?php endforeach; ?>
     </table>
