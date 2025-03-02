@@ -11,6 +11,7 @@ $users = $stmt->fetchAll();
 
 <div id="main-part">
     <h2>User list</h2>
+    <a title="Create a new user" href="add_user.php">➕Create new user</a>
     <table class="user-table">
         <tr>
             <th>ID</th>
@@ -36,7 +37,7 @@ $users = $stmt->fetchAll();
             </tr>
         <?php endforeach; ?>
     </table>
-    <a title="Create a new user" href="add_user.php">➕Create new user</a>
+    <?= backupLink('admin_dashboard.php', '🔙back to admin dashboard'); ?>
 </div>
 
 

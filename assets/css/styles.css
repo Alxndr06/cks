@@ -54,6 +54,18 @@ header {
     background-color: white;
     color: black;
 }
+
+a:visited {
+    text-decoration: none;
+}
+
+#navbar-header a:visited,
+#nav_dashboard a:visited,
+#main-part a:visited,
+.user-table a:visited {
+    text-decoration: none;
+}
+
 /* CONNECT BUTTON */
 #connect_button, #disconnect_button {
     padding: 5px;
@@ -79,6 +91,11 @@ header {
     text-align: center;
     list-style-type: none;
     position: relative;
+    position: relative;
+}
+
+#nav_dashboard ul {
+    list-style: none;
 }
 
 #nav_dashboard li {
@@ -86,10 +103,6 @@ header {
 }
 
 #nav_dashboard a {
-    text-decoration: none;
-}
-
-#nav_dashboard a:visited {
     text-decoration: none;
 }
 
@@ -102,12 +115,9 @@ header {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     /*box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;*/
     flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
-
-#main-part a:visited {
-    text-decoration: none;
-}
-
 
 #main-part h2 {
     margin-bottom: 10px;
@@ -231,3 +241,8 @@ header {
     font-weight: bold;
 }
 
+.backupLink {
+    text-decoration: none;
+    margin-top: auto; /* Pousse le lien vers le bas */
+    align-self: center; /* Centre le lien horizontalement */
+}

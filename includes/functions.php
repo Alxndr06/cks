@@ -38,6 +38,8 @@ function checkConnect() : void {
     $stmt->execute([$_SESSION['id']]);
     $user = $stmt->fetch();
 
+    $_SESSION['locked'] = $user['locked']; // Update l'état de lock
+
     if (!$user) {
         $_SESSION = [];
         session_unset();
@@ -45,12 +47,14 @@ function checkConnect() : void {
         header("Location: ../login.php?message=Account deleted");
         exit;
     }
+
+
 }
 
 // fonction de lien retour
 function backupLink(string $default, string $label) : string {
     $backupUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $default;
-    return sprintf('<a href="%s" class="EOB">%s</a>', htmlspecialchars($backupUrl), htmlspecialchars($label));
+    return sprintf('<a href="%s" class="backupLink">%s</a>', htmlspecialchars($backupUrl), htmlspecialchars($label));
 
 }
 
@@ -60,7 +64,6 @@ function AdvancedAdminActions($user) : string {
     $userId = htmlspecialchars($user['id']);
     $lockIcon = !$user['locked'] ? '🔒 Lock' : '🔓 Unlock';
     $lockUrl = "lock_user.php?id=$userId";
-    $orderListUrl = "../orders/order_list.php?userId=$userId";
     $editUrl = "edit_user.php?id=$userId";
     $deleteUrl = "delete_user.php?id=$userId";
     $billUrl = "bill_user.php?id=$userId";
@@ -68,7 +71,6 @@ function AdvancedAdminActions($user) : string {
     return '
     <div class="OEB">
         <a href="' . $lockUrl . '">' . $lockIcon . '</a> |
-        <a href="' . $orderListUrl . '">📜 Orders</a> |
         <a href="' . $editUrl . '">✏️ Edit</a> |
         <a href="' . $deleteUrl . '" onclick="return confirm(\'Delete user ?\');">🗑️ Delete</a> |
         <a href="' . $billUrl . '">💲 Bill</a>
@@ -86,6 +88,9 @@ function restrictedAdminActions($user) : string{
     | <a href="%s">💲bill</a></td>', $openUrl, $lockUrl, $lockIcon, $billUrl);
 }
 
-function displayLockedMessage(bool $isLocked) : string {
-    return $isLocked ? '<p class="alert">Your account is locked. You cannot place order.</p>' : '';
+function displayLockedStatus() : string {
+    if (isset($_SESSION['id']) && isset($_SESSION['locked']) && $_SESSION['locked']) {
+        return '<p class="alert">Your account is locked. You cannot place an order.</p>';
+    }
+    return '';
 }
