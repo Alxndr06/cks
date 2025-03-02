@@ -1,63 +1,74 @@
 <?php
+require_once __DIR__ . '/../config/db_connect.php';
+use JetBrains\PhpStorm\NoReturn;
+
+function getUserById(PDO $pdo, int $id): ?array {
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null; // Si aucun utilisateur n'est trouvé, retourne `null`
+}
+#[NoReturn] function redirectToLogin() : void {
+    header("Location: ../login.php");
+    exit;
+}
+
+#[NoReturn] function logoutAndRedirect(string $message): void {
+    session_unset();
+    session_destroy();
+    header("Location: ../login.php?message=" . urlencode($message));
+    exit;
+}
+
 //Colorie la note en fonction de son montant
-function colorDebt($note) : string  {
-    if ($note <=5) {
-        return '<span style="color: green;">' . htmlspecialchars($note) . '</span>';
-    } elseif ($note <= 10) {
-        return '<span style="color: darkorange;">' . htmlspecialchars($note) . '</span>';
-    } else {
-        return '<span style="color: red;">' . htmlspecialchars($note) . '</span>';
-    }
+function colorDebt(float $note): string {
+    $color = $note <= 5 ? 'green' : ($note <= 10 ? 'darkorange' : 'red');
+    return sprintf('<span style="color: %s;">%s</span>', $color, htmlspecialchars($note));
 }
 
 function checkNoteIsNull() : void {
     if ($_SESSION['note'] == 0) {
-        header("Location: ../user/dashboard.php");
-        exit;
-    }
-}
-
-// Vérifie si l'utilisateur est admin.
-function checkAdmin() : void {
-    if (!isset($_SESSION['id']) || $_SESSION['role'] !== "admin") {
-        header("Location: ../login.php");
-        exit;
+    header("Location: ../user/dashboard.php");
+    exit;
     }
 }
 
 // Vérifie si l'utilisateur est connecté
 function checkConnect() : void {
+    global $pdo;
+
     if (!isset($_SESSION['id'])) {
-        header("Location: ../login.php");
-        exit;
+        redirectToLogin();
     }
-    require_once '../config/db_connect.php';
 
-    // Si l'utilisateur n'existe plus en BDD, on le déconnecte.
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-    $stmt->execute([$_SESSION['id']]);
-    $user = $stmt->fetch();
-
-    $_SESSION['locked'] = $user['locked']; // Update l'état de lock
+    $user = getUserById($pdo, $_SESSION['id']);
 
     if (!$user) {
-        $_SESSION = [];
-        session_unset();
-        session_destroy();
-        header("Location: ../login.php?message=Account deleted");
-        exit;
+        logoutAndRedirect('Account deleted');
     }
+    $_SESSION['username'] = $user['username']; // Met à jour le bon nom d'utilisateur
+    $_SESSION['locked'] = $user['locked']; // Update l'état de lock
+}
 
+// Vérifie si l'utilisateur est admin.
+function checkAdmin() : void {
+    checkConnect();
+    if ($_SESSION['role'] !== "admin") {
+    redirectToLogin();
+    }
+}
 
+function displayLockedStatus() : string {
+    if (isset($_SESSION['id']) && isset($_SESSION['locked']) && $_SESSION['locked']) {
+        return '<p class="alert">Your account is locked. You cannot place an order.</p>';
+    }
+    return '';
 }
 
 // fonction de lien retour
 function backupLink(string $default, string $label) : string {
     $backupUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $default;
     return sprintf('<a href="%s" class="backupLink">%s</a>', htmlspecialchars($backupUrl), htmlspecialchars($label));
-
 }
-
 
 // fonction de barre de gestion des users
 function AdvancedAdminActions($user) : string {
@@ -83,14 +94,24 @@ function restrictedAdminActions($user) : string{
     $lockIcon = !$user['locked'] ? '🔒 Lock' : '🔓 Unlock';
     $lockUrl = "lock_user.php?id=$userId";
     $billUrl = "bill_user.php?id=$userId";
-    return sprintf('<td><a href="%s">🔎open</a>
+    return sprintf('<td><a href="%s">🔎 Open</a>
     | <a href="%s">%s</a> 
-    | <a href="%s">💲bill</a></td>', $openUrl, $lockUrl, $lockIcon, $billUrl);
+    | <a href="%s">💲Bill</a></td>', $openUrl, $lockUrl, $lockIcon, $billUrl);
 }
 
-function displayLockedStatus() : string {
-    if (isset($_SESSION['id']) && isset($_SESSION['locked']) && $_SESSION['locked']) {
-        return '<p class="alert">Your account is locked. You cannot place an order.</p>';
-    }
-    return '';
+function productAdminActions($product) : string{
+    $productId = htmlspecialchars($product['id']);
+    $editUrl = "edit_product.php?id=$productId";
+    $deleteUrl = "delete_product.php?id=$productId";
+    $restrictIcon = !$product['restricted'] ? ' Restrict' : ' Allow';
+    $restrictUrl = "restrict_product.php?id=$productId";
+    return sprintf('
+    <td><a href="%s"> Edit </a>
+    | <a href="%s">%s</a> 
+    | <a href="%s"> Delete </a></td>', $editUrl, $restrictUrl,$restrictIcon, $deleteUrl);
 }
+
+
+
+
+

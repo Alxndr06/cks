@@ -28,7 +28,7 @@ require_once __DIR__ . '/../includes/functions.php';
 <nav id="navbar-header">
     <ul>
         <li><a title="Home" href="<?= $base_url ?>index.php">Home</a></li>
-        <li><a title="Snack shop" href="<?= $base_url ?>snack_list.php">Buy a snack</a></li>
+        <li><a title="Snack shop" href="<?= $base_url ?>snack_shop.php">Buy a snack</a></li>
         <li><a title="User dashboard" href="<?= $base_url ?>user/dashboard.php">Dashboard</a> </li>
         <?php if ($isLoggedIn && $isAdmin): ?>
         <li><a title="Admin dashboard" href="<?= $base_url ?>admin/admin_dashboard.php">Admin</a> </li>
