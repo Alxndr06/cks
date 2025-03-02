@@ -25,11 +25,11 @@ if (!$user) die("Unknown user");
     <table class="user-table-vertical">
         <tr>
             <th>LASTNAME</th>
-            <td><?= htmlspecialchars(ucfirst(strtolower($user['firstname']))) ?></td>
+            <td><?= htmlspecialchars(ucfirst(strtolower($user['lastname']))) ?></td>
         </tr>
         <tr>
             <th>FIRSTNAME</th>
-            <td><?= htmlspecialchars(ucfirst(strtolower($user['lastname']))) ?></td>
+            <td><?= htmlspecialchars(ucfirst(strtolower($user['firstname']))) ?></td>
         </tr>
         <tr>
             <th>MAIL</th>
@@ -41,7 +41,7 @@ if (!$user) die("Unknown user");
         </tr>
         <tr>
             <th>CREATED</th>
-            <td><?= $user['created_at'] ?></td>
+            <td><?= date("d/m/Y", strtotime($user['created_at'])) ?></td>
         </tr>
         <tr>
             <th>DEBT</th>
@@ -56,7 +56,7 @@ if (!$user) die("Unknown user");
             <td>available soon</td>
         </tr>
     </table>
-    <?= generateUserAdminActions($user) ?>
+    <?= AdvancedAdminActions($user) ?>
     <br><br>
     <?= backupLink('user_list.php','🔙back to list'); ?>
 </div>

@@ -17,6 +17,8 @@ if (!$user) die('Unknown user');
 if (!$user['locked']) {
     $stmt = $pdo->prepare('UPDATE users SET locked = 1 WHERE id = ?');
     if ($stmt->execute([$id])) {
+        $user['locked'] = true;
+        session_write_close();
         header("Location: user_details.php?id=$id");
         exit;
     } else {
@@ -25,6 +27,8 @@ if (!$user['locked']) {
 } else {
     $stmt = $pdo->prepare('UPDATE users SET locked = 0 WHERE id = ?');
     if ($stmt->execute([$id])) {
+        $user['locked'] = false;
+        session_write_close();
         header("Location: user_details.php?id=$id");
         exit;
     } else {

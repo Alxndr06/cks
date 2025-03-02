@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </select><br><br>
         <button type="submit">Edit user</button><br><br>
     </form>
-    <a title="Back to users list" href="user_list.php">🔙back to list</a>
+    <?= backupLink("user_details.php?id=$id", '🔙back to list'); ?>
 </div>
 
 <?php require '../../includes/footer.php'; ?>
