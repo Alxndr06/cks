@@ -9,6 +9,7 @@ $products = $stmt->fetchAll();
 
 <div id="main-part">
     <h2>Snack list</h2>
+    <?= displayLockedStatus(); ?>
     <table class="user-table">
         <tr>
             <th>ID</th>
@@ -16,7 +17,7 @@ $products = $stmt->fetchAll();
             <th>Description</th>
             <th>Price</th>
             <th>Quantity available</th>
-            <?php if (isset($_SESSION['id'])): ?>
+            <?php if (isset($_SESSION['id']) && (!$_SESSION['locked'])): ?>
             <th>Actions</th>
             <?php endif; ?>
         </tr>
@@ -27,7 +28,7 @@ $products = $stmt->fetchAll();
                 <td><?= htmlspecialchars($product['description']) ?></td>
                 <td><?=$product['price'] ?> €</td>
                 <td><?= ($product['stock_quantity']) ?></td>
-                <?php if (isset($_SESSION['id'])): ?>
+                <?php if (isset($_SESSION['id']) && (!$_SESSION['locked'])): ?>
                     <td><a href="#">🛒 Order</a></td>
                 <?php endif; ?>
             </tr>
