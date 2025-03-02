@@ -1,8 +1,6 @@
 <?php
 require_once '../includes/header.php';
-
-checkConnect();
-
+checkAdmin();
 ?>
 
     <div id="main-part">

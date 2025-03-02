@@ -2,13 +2,18 @@
 require_once 'includes/header.php';
 require_once 'config/db_connect.php';
 
-$stmt = $pdo->prepare("SELECT id, name, description, price, stock_quantity FROM products");
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === "admin";
+
+$query = "SELECT id, name, description, price, stock_quantity FROM products";
+$query .= $isAdmin ? "" : " WHERE restricted = 0"; // Ajoute la condition seulement si ce n'est pas un admin
+
+$stmt = $pdo->prepare($query);
 $stmt->execute();
 $products = $stmt->fetchAll();
 ?>
 
 <div id="main-part">
-    <h2>Snack list</h2>
+    <h2>Snack shop</h2>
     <?= displayLockedStatus(); ?>
     <table class="user-table">
         <tr>
@@ -29,7 +34,13 @@ $products = $stmt->fetchAll();
                 <td><?=$product['price'] ?> €</td>
                 <td><?= ($product['stock_quantity']) ?></td>
                 <?php if (isset($_SESSION['id']) && (!$_SESSION['locked'])): ?>
-                    <td><a href="#">🛒 Order</a></td>
+                <td>
+                    <form>
+                        <label for="quantity">Quantity :</label>
+                        <input type="number" name="quantity" id="quantity" value="1">
+                        <button>🛒 Order</button>
+                    </form>
+                </td>
                 <?php endif; ?>
             </tr>
         <?php endforeach; ?>
