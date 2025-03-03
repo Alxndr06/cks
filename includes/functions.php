@@ -8,6 +8,7 @@ function getUserById(PDO $pdo, int $id): ?array {
     $stmt->execute([$id]);
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null; // Si aucun utilisateur n'est trouvé, retourne `null`
 }
+
 #[NoReturn] function redirectToLogin() : void {
     global $base_url;
     header("Location: " . $base_url . "login.php");
