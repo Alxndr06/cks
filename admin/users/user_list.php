@@ -37,7 +37,7 @@ $users = $stmt->fetchAll();
             </tr>
         <?php endforeach; ?>
     </table>
-    <?= backupLink('admin_dashboard.php', '🔙back to admin dashboard'); ?>
+    <?= backupLink('user_management.php', '🔙back to user management'); ?>
 </div>
 
 

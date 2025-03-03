@@ -1,4 +1,5 @@
 <?php
+global $base_url;
 require_once '../../includes/header.php';
 
 checkAdmin();
@@ -10,7 +11,7 @@ checkAdmin();
             <li><a title="Show all users" href="user_list.php">📋Show all users</a></li>
             <li><a title="Create a new user" href="add_user.php">➕Create new user</a></li>
         </div>
-        <?= backupLink('admin_dashboard.php', '🔙back to admin dashboard'); ?>
+        <?= backupLink('../admin_dashboard.php', '🔙back to admin dashboard'); ?>
     </div>
 
 <?php require '../../includes/footer.php'; ?>
