@@ -6,6 +6,10 @@ config/db_connect.php
 node_modules/
 vendor/
 .env
+.tmp.driveupload
+.idea/
+.vscode/
+__pycache__/
 
 # Fichiers système
 .DS_Store
