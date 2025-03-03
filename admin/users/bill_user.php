@@ -23,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt = $pdo->prepare("UPDATE users SET note = ? WHERE id = ?");
     if($stmt->execute([($note + $billAmount), $id])){
+        logAction($pdo, $_SESSION['id'], 'bill_user', "Billed user " . $user['username'] . " (ID :  " . $user['id'] . " amount: " . $billAmount . ")" );
         header('Location: user_details.php?id='.$id);
         exit;
     } else {

@@ -3,9 +3,11 @@ require_once '../../includes/header.php';
 require_once '../../config/db_connect.php';
 
 checkAdmin();
+$csrf_token = getCsrfToken();
 
 //LOGIQUE ADD USER
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    checkCsrfToken();
     $username = $_POST['username'];
     $lastname = $_POST['lastname'];
     $firstname = $_POST['firstname'];
@@ -15,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     $stmt = $pdo->prepare("INSERT INTO users (username, lastname, firstname, email, password, role) VALUES (?, ?, ?, ?, ?, ?)");
     if ($stmt->execute([$username, $lastname, $firstname, $email, $password, $role])) {
+        logAction($pdo, $_SESSION['id'], 'create_user', "Created user " . $username . " (mail :  " . $email . ")" );
         header('Location: user_list.php');
         exit;
     } else {
@@ -26,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div id="main-part">
     <h2>Create an user</h2>
     <form method="POST">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
         <label for="username">Username :</label>
         <input type="text" id="username" name="username" required><br><br>
         <label for="lastname">Lastname :</label>

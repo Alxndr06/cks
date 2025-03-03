@@ -1,9 +1,7 @@
 <?php
 require_once '../../includes/header.php';
-require_once '../../config/db_connect.php';
-
+getCsrfToken();
 checkAdmin();
-
 //Récupération de la liste des utilisateurs
 $stmt = $pdo->query("SELECT id, username, email, note, role, locked FROM users");
 $users = $stmt->fetchAll();

@@ -3,6 +3,25 @@ require_once __DIR__ . '/../config/db_connect.php';
 require_once __DIR__ . '/../config/config.php';
 use JetBrains\PhpStorm\NoReturn;
 
+function getCsrfToken(): string {
+    if (empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['csrf_token'];
+}
+
+function checkCsrfToken(): void {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("Invalid CSRF token.");
+    }
+}
+
+function checkMethodPost() : void {
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        die("Invalid request method.");
+    }
+}
+
 function getUserById(PDO $pdo, int $id): ?array {
     $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
     $stmt->execute([$id]);
@@ -56,7 +75,7 @@ function checkConnect() : void {
 // Vérifie si l'utilisateur est admin.
 function checkAdmin() : void {
     checkConnect();
-    if ($_SESSION['role'] !== "admin") {
+    if (!isset($_SESSION['role']) || $_SESSION['role'] !== "admin") {
     redirectToLogin();
     }
 }
@@ -85,34 +104,71 @@ function backupLink(string $default, string $label): string {
     return sprintf('<a href="%s" class="backupLink">%s</a>', htmlspecialchars($backupUrl, ENT_QUOTES, 'UTF-8'), htmlspecialchars($label, ENT_QUOTES, 'UTF-8'));
 }
 
+function restrictedAdminActions($user) : string {
+    $userId = htmlspecialchars($user['id']);
+    $csrfToken = getCsrfToken(); // 🔹 Stocker le token pour éviter plusieurs appels
+    $lockIcon = !$user['locked'] ? '🔒' : '🔓';
+
+    return sprintf('
+        <td>
+            <form action="user_details.php" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="%s">
+                <input type="hidden" name="id" value="%s">
+                <button type="submit">🔎</button>
+            </form>
+            | <form action="lock_user.php" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="%s">
+                <input type="hidden" name="id" value="%s">
+                <button type="submit">%s</button>
+            </form>
+            | <form action="bill_user.php" method="GET" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="%s">
+                <input type="hidden" name="id" value="%s">
+                <button type="submit">💲</button>
+            </form>
+        </td>',
+        $csrfToken, $userId,
+        $csrfToken, $userId, $lockIcon,
+        $csrfToken, $userId
+    );
+}
+
 // fonction de barre de gestion des users
-function AdvancedAdminActions($user) : string {
+function advancedAdminActions($user) : string {
     $userId = htmlspecialchars($user['id']);
-    $lockIcon = !$user['locked'] ? '🔒 Lock' : '🔓 Unlock';
-    $lockUrl = "lock_user.php?id=$userId";
-    $editUrl = "edit_user.php?id=$userId";
-    $deleteUrl = "delete_user.php?id=$userId";
-    $billUrl = "bill_user.php?id=$userId";
+    $csrfToken = getCsrfToken(); // 🔹 Stocker le token pour éviter plusieurs appels
+    $lockIcon = !$user['locked'] ? '🔒' : '🔓';
 
-    return '
-    <div class="OEB">
-        <a href="' . $lockUrl . '">' . $lockIcon . '</a> |
-        <a href="' . $editUrl . '">✏️ Edit</a> |
-        <a href="' . $deleteUrl . '" onclick="return confirm(\'Delete user ?\');">🗑️ Delete</a> |
-        <a href="' . $billUrl . '">💲 Bill</a>
-    </div>';
+    return sprintf('
+        <div class="OEB">
+             <form action="lock_user.php" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="%s">
+                <input type="hidden" name="id" value="%s">
+                <button type="submit">%s</button>
+            </form>
+            | <form action="bill_user.php" method="GET" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="%s">
+                <input type="hidden" name="id" value="%s">
+                <button type="submit">💲</button>
+            </form>
+            | <form action="edit_user.php" method="GET" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="%s">
+                <input type="hidden" name="id" value="%s">
+                <button type="submit">✏️</button>
+            </form>
+            | <form action="delete_user.php" method="POST" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="%s">
+                <input type="hidden" name="id" value="%s">
+                <button type="submit">❌</button>
+              </form>
+        </div>',
+        $csrfToken, $userId, $lockIcon,
+        $csrfToken, $userId,
+        $csrfToken, $userId,
+        $csrfToken, $userId
+    );
 }
 
-function restrictedAdminActions($user) : string{
-    $userId = htmlspecialchars($user['id']);
-    $openUrl = "user_details.php?id=$userId";
-    $lockIcon = !$user['locked'] ? '🔒 Lock' : '🔓 Unlock';
-    $lockUrl = "lock_user.php?id=$userId";
-    $billUrl = "bill_user.php?id=$userId";
-    return sprintf('<td><a href="%s">🔎 Open</a>
-    | <a href="%s">%s</a> 
-    | <a href="%s">💲Bill</a></td>', $openUrl, $lockUrl, $lockIcon, $billUrl);
-}
 
 function productAdminActions($product) : string{
     $productId = htmlspecialchars($product['id']);
@@ -126,7 +182,11 @@ function productAdminActions($product) : string{
     | <a href="%s"> Delete </a></td>', $editUrl, $restrictUrl,$restrictIcon, $deleteUrl);
 }
 
-
+function logAction($pdo, $user_id, $action, $description) {
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $stmt = $pdo->prepare("INSERT INTO logs (user_id, action, description, ip_address) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$user_id, $action, $description, $ip]);
+}
 
 
 

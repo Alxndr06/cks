@@ -3,6 +3,8 @@ require_once '../../includes/header.php';
 require_once '../../config/db_connect.php';
 
 checkAdmin();
+$csrf_token = getCsrfToken();
+
 
 //LOGIQUE EDIT USER
 // Récupérer l'utilisateur
@@ -17,6 +19,7 @@ if (!$user) die("Unknown user");
 
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    checkCsrfToken();
     $username = $_POST['username'];
     $lastName = $_POST['lastname'];
     $firstName = $_POST['firstname'];
@@ -28,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 //Mise à jour de l'user sur la bdd
     $stmt = $pdo->prepare("UPDATE users SET username = ?, lastname = ?, firstname = ?, email = ?, password = ?, role = ? WHERE id = ?");
     if ($stmt->execute([$username, $lastName, $firstName, $email, $password, $role, $id])) {
+        logAction($pdo, $_SESSION['id'], 'edit_user', "Edited user " . $user['username'] . " (ID :  " . $user['id'] . ")" );
         header('Location: user_list.php');
         exit;
     } else {
@@ -36,28 +40,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-<div id="main-part">
-    <h2>Edit user</h2>
-    <form method="POST">
-        <label for="username">Username :</label>
-        <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>" required><br><br>
-        <label for="lastname">Lastname :</label>
-        <input type="text" id="lastname" name="lastname" value="<?= htmlspecialchars($user['lastname']) ?>" required><br><br>
-        <label for="firstname">Firstname :</label>
-        <input type="text" id="firstname" name="firstname" value="<?= htmlspecialchars($user['firstname']) ?>" required><br><br>
-        <label for="email">Email :</label>
-        <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required><br><br>
-        <label for="password">Password :</label>
-        <input type="password" id="password" name="password" ><br><br>
-        <label for="role">Select role :</label>
-        <select name="role" id="role" required>
-            <option value="">--Select role--</option>
-            <option value="user">User</option>
-            <option value="admin">Admin</option>
-        </select><br><br>
-        <button type="submit">Edit user</button><br><br>
-    </form>
-    <?= backupLink("user_details.php?id=$id", '🔙back to list'); ?>
-</div>
+    <div id="main-part">
+        <h2>Edit user</h2>
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
+            <label for="username">Username :</label>
+            <input type="text" id="username" name="username" value="<?= htmlspecialchars($user['username']) ?>" required><br><br>
+            <label for="lastname">Lastname :</label>
+            <input type="text" id="lastname" name="lastname" value="<?= htmlspecialchars($user['lastname']) ?>" required><br><br>
+            <label for="firstname">Firstname :</label>
+            <input type="text" id="firstname" name="firstname" value="<?= htmlspecialchars($user['firstname']) ?>" required><br><br>
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" required><br><br>
+            <label for="password">Password :</label>
+            <input type="password" id="password" name="password" ><br><br>
+            <label for="role">Select role :</label>
+            <select name="role" id="role" required>
+                <option value="">--Select role--</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select><br><br>
+            <button type="submit">Edit user</button><br><br>
+        </form>
+        <?= backupLink("user_details.php?id=$id", '🔙back to list'); ?>
+    </div>
 
 <?php require '../../includes/footer.php'; ?>

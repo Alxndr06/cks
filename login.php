@@ -3,9 +3,7 @@ require_once 'includes/header.php';
 require_once 'config/db_connect.php';
 
 // Si pas de token CSRF,  on en génère un
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
+getCsrfToken();
 
 //On s'assure que l'user ne soit pas déjà log
 if (isset($_SESSION['id'])) {

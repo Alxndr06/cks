@@ -1,12 +1,25 @@
 <?php
 require_once '../../includes/header.php';
 require_once '../../config/db_connect.php';
-
 checkAdmin();
+getCsrfToken();
+
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    die("<div class='alert'>Access denied</div>");
+}
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    die("Invalid request method.");
+}
+
+// Vérification du token CSRF
+if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die("Invalid CSRF token.");
+}
 
 // Récupération des informations de l'utilisateur
-if (!isset($_GET['id'])) die("Unknown user");
-$id = $_GET['id'];
+if (!isset($_POST['id'])) die("Unknown user");
+$id = $_POST['id'];
 
 //On récupére l'utilisateur
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");

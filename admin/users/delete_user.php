@@ -4,17 +4,13 @@ require_once '../../config/db_connect.php';
 require_once '../../includes/functions.php';
 
 checkAdmin();
-
-// On vérifie que l'ID soit bien un entier et pas autre chose
-if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
-    die("<div class='alert'>Invalid user ID</div>");
-}
-
-// Récupération de l'utilisateur
-if (!isset($_GET['id'])) die('Unknown user');
-
-// Conversion en Int pour être sûr le reuf
-$id = (int) $_GET['id'];
+//Vérification de la méthode POST
+checkMethodPost();
+// Vérification du token CSRF
+checkCsrfToken();
+// récupération de l'user
+if (!isset($_POST['id'])) die('Unknown user');
+$id = $_POST['id'];
 
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$id]);
@@ -32,6 +28,7 @@ if ($user['role'] !== 'admin') {
     // logique de suppression de la bdd
     $stmt = $pdo->prepare('DELETE FROM users WHERE id = ?');
     if ($stmt->execute([$id])) {
+        logAction($pdo, $_SESSION['id'], 'delete_user', "Deleted user " . $user['username'] . " (ID :  " . $user['id'] . ")" );
         header('Location: user_list.php');
         exit;
     } else {

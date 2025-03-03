@@ -11,6 +11,7 @@ checkAdmin();
         <li><a title="Stock management" href="stock/stock_management.php">📋Stock management</a></li>
         <li><a title="Debts management" href="users/debts_management.php">💵Debts management</a></li>
         <li><a title="Order management" href="orders/order_management.php">📜Order management</a></li>
+        <li><a title="Server logs" href="logs.php">📜Server logs</a></li>
     </div>
 </div>
 
