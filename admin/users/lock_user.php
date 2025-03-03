@@ -1,6 +1,10 @@
 <?php
 require_once '../../config/db_connect.php';
 
+if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
+    die("<div class='alert'>Access denied</div>");
+}
+
 // récupération de l'user
 if (!isset($_GET['id'])) die('Unknown user');
 

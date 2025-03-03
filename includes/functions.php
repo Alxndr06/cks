@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/db_connect.php';
+require_once __DIR__ . '/../config/config.php';
 use JetBrains\PhpStorm\NoReturn;
 
 function getUserById(PDO $pdo, int $id): ?array {
@@ -8,7 +9,8 @@ function getUserById(PDO $pdo, int $id): ?array {
     return $stmt->fetch(PDO::FETCH_ASSOC) ?: null; // Si aucun utilisateur n'est trouvé, retourne `null`
 }
 #[NoReturn] function redirectToLogin() : void {
-    header("Location: ../login.php");
+    global $base_url;
+    header("Location: " . $base_url . "login.php");
     exit;
 }
 
@@ -46,6 +48,7 @@ function checkConnect() : void {
         logoutAndRedirect('Account deleted');
     }
     $_SESSION['username'] = $user['username']; // Met à jour le bon nom d'utilisateur
+    $_SESSION['note'] = $user['note'];
     $_SESSION['locked'] = $user['locked']; // Update l'état de lock
 }
 
@@ -65,9 +68,20 @@ function displayLockedStatus() : string {
 }
 
 // fonction de lien retour
-function backupLink(string $default, string $label) : string {
-    $backupUrl = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $default;
-    return sprintf('<a href="%s" class="backupLink">%s</a>', htmlspecialchars($backupUrl), htmlspecialchars($label));
+function backupLink(string $default, string $label): string {
+    $backupUrl = $default;
+
+    // Vérifier si HTTP_REFERER est présent et appartient à notre domaine
+    if (!empty($_SERVER['HTTP_REFERER'])) {
+        $parsedUrl = parse_url($_SERVER['HTTP_REFERER']);
+
+        // Vérifier que le domaine du REFERER est bien celui du site
+        if (!empty($parsedUrl['host']) && $parsedUrl['host'] === $_SERVER['SERVER_NAME']) {
+            $backupUrl = $_SERVER['HTTP_REFERER'];
+        }
+    }
+
+    return sprintf('<a href="%s" class="backupLink">%s</a>', htmlspecialchars($backupUrl, ENT_QUOTES, 'UTF-8'), htmlspecialchars($label, ENT_QUOTES, 'UTF-8'));
 }
 
 // fonction de barre de gestion des users

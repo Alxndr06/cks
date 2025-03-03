@@ -1,11 +1,20 @@
 <?php
 session_start();
 require_once '../../config/db_connect.php';
+require_once '../../includes/functions.php';
+
+checkAdmin();
+
+// On vérifie que l'ID soit bien un entier et pas autre chose
+if (!isset($_GET['id']) || !filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
+    die("<div class='alert'>Invalid user ID</div>");
+}
 
 // Récupération de l'utilisateur
 if (!isset($_GET['id'])) die('Unknown user');
 
-$id = $_GET['id'];
+// Conversion en Int pour être sûr le reuf
+$id = (int) $_GET['id'];
 
 $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
 $stmt->execute([$id]);
