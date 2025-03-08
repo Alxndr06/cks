@@ -21,7 +21,7 @@ require_once __DIR__ . '/../includes/functions.php';
     <?php if ($isLoggedIn): ?>
     <a id="disconnect_button" title="Disconnect" href="<?= $base_url ?>logout.php">Disconnect (<?php echo $username ?>)</a>
     <?php else: ?>
-    <a id="connect_button" title=Connect" href="<?= $base_url ?>logout.php">Connect</a>
+    <a id="connect_button" title="Connect" href="<?= $base_url ?>logout.php">Connect</a>
     <?php endif; ?>
 </header>
 <!--BARRE DE NAVIGATION-->

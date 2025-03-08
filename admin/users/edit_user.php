@@ -5,8 +5,6 @@ require_once '../../config/db_connect.php';
 checkAdmin();
 $csrf_token = getCsrfToken();
 
-
-//LOGIQUE EDIT USER
 // Récupérer l'utilisateur
 if (!isset($_GET['id'])) die("Unknown user");
 $id = $_GET['id'];

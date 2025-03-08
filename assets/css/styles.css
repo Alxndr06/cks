@@ -252,3 +252,9 @@ a:visited {
     padding: 5px;
     text-align: center; /* Centre le texte à l'intérieur */
 }
+
+button img {
+    width: 1.2em; /* Ajuste selon le rendu souhaité */
+    height: 1.2em;
+    vertical-align: middle;
+}

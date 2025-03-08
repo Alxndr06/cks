@@ -109,6 +109,7 @@ function restrictedAdminActions($user) : string {
     $csrfToken = getCsrfToken(); // 🔹 Stocker le token pour éviter plusieurs appels
     $lockIcon = !$user['locked'] ? '🔒' : '🔓';
 
+
     return sprintf('
         <td>
             <form action="user_details.php" method="POST" style="display:inline;">
@@ -144,22 +145,22 @@ function advancedAdminActions($user) : string {
              <form action="lock_user.php" method="POST" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="%s">
                 <input type="hidden" name="id" value="%s">
-                <button type="submit">%s</button>
+                <button type="submit" title="Lock/Unlock user">%s</button>
             </form>
             | <form action="bill_user.php" method="GET" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="%s">
                 <input type="hidden" name="id" value="%s">
-                <button type="submit">💲</button>
+                <button type="submit" title="Bill user">💲</button>
             </form>
             | <form action="edit_user.php" method="GET" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="%s">
                 <input type="hidden" name="id" value="%s">
-                <button type="submit">✏️</button>
+                <button type="submit" title="Edit user">✏️</button>
             </form>
             | <form action="delete_user.php" method="POST" style="display:inline;">
                 <input type="hidden" name="csrf_token" value="%s">
                 <input type="hidden" name="id" value="%s">
-                <button type="submit">❌</button>
+                <button type="submit" title="Delete user">❌</button>
               </form>
         </div>',
         $csrfToken, $userId, $lockIcon,
@@ -174,12 +175,12 @@ function productAdminActions($product) : string{
     $productId = htmlspecialchars($product['id']);
     $editUrl = "edit_product.php?id=$productId";
     $deleteUrl = "delete_product.php?id=$productId";
-    $restrictIcon = !$product['restricted'] ? ' Restrict' : ' Allow';
+    $restrictIcon = !$product['restricted'] ? '🛑' : '✅';
     $restrictUrl = "restrict_product.php?id=$productId";
     return sprintf('
-    <td><a href="%s"> Edit </a>
+    <td><a href="%s">✏️️️️</a>
     | <a href="%s">%s</a> 
-    | <a href="%s"> Delete </a></td>', $editUrl, $restrictUrl,$restrictIcon, $deleteUrl);
+    | <a href="%s">❌</a></td>', $editUrl, $restrictUrl,$restrictIcon, $deleteUrl);
 }
 
 function logAction($pdo, $user_id, $action, $description) {
